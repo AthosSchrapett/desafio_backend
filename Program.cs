@@ -1,10 +1,13 @@
-﻿using desafio_backend.Endpoints;
+﻿using desafio_backend.Data;
+using desafio_backend.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
+
+builder.Services.AddNpgsql<AppDbContext>(builder.Configuration["ConnectionString:desafio_backendDB"]);
 
 var app = builder.Build();
 

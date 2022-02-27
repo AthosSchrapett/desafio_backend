@@ -13,9 +13,16 @@ public class PagamentoPost
     {
         var pagamento = new Pagamento(pagamentoRequest.Valor);
 
-        dbContext.Pagamento.Add(pagamento);
-        dbContext.SaveChanges();
+        if (pagamento.Valor > 0)
+        {
+            dbContext.Pagamento.Add(pagamento);
+            dbContext.SaveChanges();
 
-        return Results.Ok();
+            return Results.Ok();
+        }
+        else
+        {
+            return Results.NotFound();
+        }
     }
 }

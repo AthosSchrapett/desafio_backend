@@ -1,12 +1,13 @@
 ﻿using desafio_backend.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace desafio_backend.Data;
 
-public class AppDbContext : IdentityDbContext<IdentityUser>
+public class AppDbContext : DbContext
 {
+    public AppDbContext()
+    {
+    }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     public DbSet<Pagamento> Pagamento { get; set; }
 
