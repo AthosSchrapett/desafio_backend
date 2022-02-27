@@ -11,11 +11,15 @@ public class PagamentoPost
 
     public static IResult Action(PagamentoRequest pagamentoRequest, AppDbContext dbContext)
     {
-        var pagamento = new Pagamento(pagamentoRequest.Valor);
+        var pagamento = new Pagamento(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago);
 
-        if (pagamento.Valor > 0)
+        if (pagamento.ValorTotal > 0 && pagamento.ValorPago > 0)
         {
             dbContext.Pagamento.Add(pagamento);
+
+            var troco = new Troco(DefineTroco(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago), pagamento.Id);
+            dbContext.Troco.Add(troco);
+
             dbContext.SaveChanges();
 
             return Results.Ok();
@@ -24,5 +28,11 @@ public class PagamentoPost
         {
             return Results.NotFound();
         }
+    }
+    public static double DefineTroco(double valorTotal, double valorPago)
+    {
+        double valorTroco = valorPago - valorTotal;
+
+        return valorTroco;
     }
 }

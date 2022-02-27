@@ -3,12 +3,13 @@
 public class Pagamento
 {    
     public Guid Id { get; set; }
-    public double Valor { get; set; }
+    public double ValorTotal { get; set; }
+    public double ValorPago { get; set; }
 
-    public Pagamento(double valor)
+    public Pagamento(double valorTotal, double valorPago)
     {
         Id = Guid.NewGuid();
-        this.Valor = valor;
+        this.ValorTotal = valorTotal;
+        this.ValorPago = valorPago;
     }
-
 }
