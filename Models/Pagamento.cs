@@ -12,4 +12,10 @@ public class Pagamento
         this.ValorTotal = valorTotal;
         this.ValorPago = valorPago;
     }
+
+    public void EditValor(double valorTotal, double valorPago)
+    {
+        ValorTotal = valorTotal;
+        ValorPago = valorPago;
+    }
 }

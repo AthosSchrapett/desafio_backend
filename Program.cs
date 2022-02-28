@@ -29,6 +29,9 @@ app.UseCors(x => x
 
 app.MapMethods(PagamentoPost.Template, PagamentoPost.Methods, PagamentoPost.Action);
 app.MapMethods(PagamentoGet.Template, PagamentoGet.Methods, PagamentoGet.Action);
+app.MapMethods(PagamentoPut.Template, PagamentoPut.Methods, PagamentoPut.Action);
+app.MapMethods(PagamentoDelete.Template, PagamentoDelete.Methods, PagamentoDelete.Action);
+
 app.MapMethods(TrocoGet.Template, TrocoGet.Methods, TrocoGet.Action);
 
 app.Run();

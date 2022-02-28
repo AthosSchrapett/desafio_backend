@@ -4,7 +4,7 @@ namespace desafio_backend.Endpoints;
 
 public class PagamentoGet
 {
-    public static string Template => "/pagamentos";
+    public static string Template => "/pagamento";
     public static string[] Methods => new string[] { HttpMethod.Get.ToString() };
     public static Delegate Handle => Action;
 

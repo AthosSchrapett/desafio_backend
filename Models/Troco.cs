@@ -16,5 +16,12 @@ public class Troco
         this.PagamentoId = pagamentoId;
         this.NotasInfo = notasInfo;
         this.MoedasInfo = moedasInfo;
-    }    
+    }
+
+    public void EditValor(double valorTroco, List<string> notasInfo, List<string> moedasInfo)
+    {
+        this.ValorTroco = valorTroco;
+        this.NotasInfo = notasInfo;
+        this.MoedasInfo = moedasInfo;
+    }
 }
