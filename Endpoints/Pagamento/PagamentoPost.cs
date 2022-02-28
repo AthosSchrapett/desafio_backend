@@ -15,7 +15,7 @@ public class PagamentoPost
         List<string> notasInfo = new();
         List<string> moedasInfo = new();
 
-        if (pagamento.ValorTotal > 0 && pagamento.ValorPago > pagamento.ValorTotal)
+        if (pagamento.ValorTotal > 0 && pagamento.ValorPago >= pagamento.ValorTotal)
         {
             dbContext.Pagamento.Add(pagamento);
 
