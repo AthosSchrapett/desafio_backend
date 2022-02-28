@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -28,6 +29,8 @@ namespace desafio_backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ValorTroco = table.Column<double>(type: "double precision", nullable: false),
+                    NotasInfo = table.Column<List<string>>(type: "text[]", nullable: false),
+                    MoedasInfo = table.Column<List<string>>(type: "text[]", nullable: false),
                     PagamentoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

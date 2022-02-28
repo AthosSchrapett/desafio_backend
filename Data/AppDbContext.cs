@@ -23,6 +23,10 @@ public class AppDbContext : DbContext
 
         builder.Entity<Troco>()
             .Property(p => p.ValorTroco).IsRequired();
+        //builder.Entity<Troco>()
+        //    .Property(p => p.MoedasInfo).IsRequired();
+        //builder.Entity<Troco>()
+        //    .Property(p => p.NotasInfo).IsRequired();
     }
 
 }

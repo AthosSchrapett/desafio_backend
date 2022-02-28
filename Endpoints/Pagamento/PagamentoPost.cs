@@ -9,6 +9,9 @@ public class PagamentoPost
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
+    private static readonly List<string> notasInfo = new();
+    private static readonly List<string> moedasInfo = new();
+
     public static IResult Action(PagamentoRequest pagamentoRequest, AppDbContext dbContext)
     {
         var pagamento = new Pagamento(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago);
@@ -17,7 +20,12 @@ public class PagamentoPost
         {
             dbContext.Pagamento.Add(pagamento);
 
-            var troco = new Troco(DefineTroco(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago), pagamento.Id);
+            var troco = new Troco(
+                DefineTroco(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago), 
+                pagamento.Id,
+                notasInfo,
+                moedasInfo
+                );
             dbContext.Troco.Add(troco);
 
             dbContext.SaveChanges();
@@ -35,15 +43,14 @@ public class PagamentoPost
         List<double> notas = new List<double> { 10.00, 20.00, 50.00, 100.00 };
         List<double> moedas = new List<double> { 0.01, 0.05, 0.10, 0.50 };
 
-        List<double> notasTroco = new List<double>();
-        List<double> moedasTroco = new List<double>();
+        List<double> notasTroco = new();
+        List<double> moedasTroco = new();
 
         double valorTroco = Math.Round(valorPago - valorTotal, 2);
 
         double trocoRetirado = valorTroco;
         double trocoParaSepararNotas = trocoRetirado;
 
-        var index = 0;
         do
         {
             var notasMaiores = notas.Where(x => x <= trocoRetirado);
@@ -66,9 +73,7 @@ public class PagamentoPost
                 }
             }
 
-            index++;
-
-        } while (notasTroco.Count() >= index);
+        } while (trocoParaSepararNotas > 0);
 
         do
         {
@@ -84,17 +89,12 @@ public class PagamentoPost
                 }
             }
 
-            index++;
-
-        } while (moedas.Count() >= index);
-
-        List<string> notasInfo = new List<string>();
-        List<string> moedasInfo = new List<string>();
+        } while (trocoRetirado > 0);
 
         foreach (var nota in notasTroco.Distinct())
-            notasInfo.Add($"Troco em Notas de {nota} R$: " + notasTroco.Where(x => x == nota).Count().ToString()) ;
+            notasInfo.Add($"Troco em Notas de {nota} R$: {notasTroco.Where(x => x == nota).Count().ToString()}") ;
         foreach (var moeda in moedasTroco.Distinct())
-            moedasInfo.Add($"Troco em Moedas de {moeda} R$: " + moedasTroco.Where(x => x == moeda).Count().ToString());
+            moedasInfo.Add($"Troco em Moedas de {moeda} R$: {moedasTroco.Where(x => x == moeda).Count().ToString()}");
 
         return valorTroco;
     }
