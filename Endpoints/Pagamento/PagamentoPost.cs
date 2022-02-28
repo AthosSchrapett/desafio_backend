@@ -77,7 +77,7 @@ public class PagamentoPost
                 }
             }
 
-        } while (trocoParaSepararNotas > 10);
+        } while (trocoParaSepararNotas >= 10);
 
         do
         {
