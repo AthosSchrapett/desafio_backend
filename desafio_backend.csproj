@@ -26,8 +26,4 @@
     <None Include="D:\Meus projetos\desafio_backend\.editorconfig" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Enum\" />
-  </ItemGroup>
-
 </Project>

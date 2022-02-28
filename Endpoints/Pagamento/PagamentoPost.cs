@@ -9,19 +9,26 @@ public class PagamentoPost
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
-    private static readonly List<string> notasInfo = new();
-    private static readonly List<string> moedasInfo = new();
+    //private static readonly List<string> notasInfo = new();
+    //private static readonly List<string> moedasInfo = new();
 
     public static IResult Action(PagamentoRequest pagamentoRequest, AppDbContext dbContext)
     {
         var pagamento = new Pagamento(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago);
+        List<string> notasInfo = new();
+        List<string> moedasInfo = new();
 
         if (pagamento.ValorTotal > 0 && pagamento.ValorPago > pagamento.ValorTotal)
         {
             dbContext.Pagamento.Add(pagamento);
 
             var troco = new Troco(
-                DefineTroco(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago), 
+                DefineTroco(
+                    pagamentoRequest.ValorTotal, 
+                    pagamentoRequest.ValorPago,
+                    notasInfo, 
+                    moedasInfo
+                ), 
                 pagamento.Id,
                 notasInfo,
                 moedasInfo
@@ -38,7 +45,7 @@ public class PagamentoPost
         }
     }
 
-    public static double DefineTroco(double valorTotal, double valorPago)
+    public static double DefineTroco(double valorTotal, double valorPago, List<string> notasInfo, List<string> moedasInfo)
     {
         List<double> notas = new List<double> { 10.00, 20.00, 50.00, 100.00 };
         List<double> moedas = new List<double> { 0.01, 0.05, 0.10, 0.50 };
@@ -55,7 +62,7 @@ public class PagamentoPost
         {
             var notasMaiores = notas.Where(x => x <= trocoRetirado);
 
-            foreach (var nota in notasMaiores.Reverse())
+            foreach (double nota in notasMaiores.Reverse())
             {
                 if (!trocoParaSepararNotas.ToString().Split(",")[0].EndsWith("0"))
                 {
@@ -73,17 +80,17 @@ public class PagamentoPost
                 }
             }
 
-        } while (trocoParaSepararNotas > 0);
+        } while (trocoParaSepararNotas > 10);
 
         do
         {
             var moedasMaiores = moedas.Where(x => x <= trocoRetirado);
 
-            foreach (var moeda in moedasMaiores.Reverse())
+            foreach (double moeda in moedasMaiores.Reverse())
             {
                 if(moeda == (trocoRetirado - moeda) || moeda == moedas.Where(x => x <= trocoRetirado).Reverse().First())
                 {
-                    trocoRetirado -= Math.Round(moeda, 2);
+                    trocoRetirado = Math.Round(trocoRetirado - moeda, 2);
                     moedasTroco.Add(Math.Round(moeda, 2));
                     break;
                 }
@@ -91,10 +98,10 @@ public class PagamentoPost
 
         } while (trocoRetirado > 0);
 
-        foreach (var nota in notasTroco.Distinct())
-            notasInfo.Add($"Troco em Notas de {nota} R$: {notasTroco.Where(x => x == nota).Count().ToString()}") ;
-        foreach (var moeda in moedasTroco.Distinct())
-            moedasInfo.Add($"Troco em Moedas de {moeda} R$: {moedasTroco.Where(x => x == moeda).Count().ToString()}");
+        foreach (double nota in notasTroco.Distinct())
+            notasInfo.Add($"Troco em Notas de {nota} R$: {notasTroco.Where(x => x == nota).Count()}");
+        foreach (double moeda in moedasTroco.Distinct())
+            moedasInfo.Add($"Troco em Moedas de {moeda} R$: {moedasTroco.Where(x => x == moeda).Count()}");
 
         return valorTroco;
     }

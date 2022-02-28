@@ -25,5 +25,6 @@ app.UseCors(x => x
     .AllowAnyHeader());
 
 app.MapMethods(PagamentoPost.Template, PagamentoPost.Methods, PagamentoPost.Action);
+app.MapMethods(TrocoGet.Template, TrocoGet.Methods, TrocoGet.Action);
 
 app.Run();
