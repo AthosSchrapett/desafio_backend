@@ -9,6 +9,8 @@ builder.Services.AddCors();
 
 builder.Services.AddNpgsql<AppDbContext>(builder.Configuration["ConnectionString:desafio_backendDB"]);
 
+builder.Services.AddScoped<QueryTroco>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

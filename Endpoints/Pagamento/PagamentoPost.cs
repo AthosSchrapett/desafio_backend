@@ -9,9 +9,6 @@ public class PagamentoPost
     public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
     public static Delegate Handle => Action;
 
-    //private static readonly List<string> notasInfo = new();
-    //private static readonly List<string> moedasInfo = new();
-
     public static IResult Action(PagamentoRequest pagamentoRequest, AppDbContext dbContext)
     {
         var pagamento = new Pagamento(pagamentoRequest.ValorTotal, pagamentoRequest.ValorPago);
